@@ -24,31 +24,31 @@ function openMenu() {
 		switch (answer.menuOptions) {
 			case 'Create':
 				console.log("Let's make a new flashcard...");
-				waitMsg = setTimeout(createCard, 1000);
+				waitMsg = setTimeout(createCard, 1000); // createCard function will run after 1 seconds
 				break;
 
 			case 'Use All':
 				console.log("Let's run through the deck");
-				waitMsg = setTimeout(askQuestions, 1000);
+				waitMsg = setTimeout(askQuestions, 1000); // UseAll function will run after 1 seconds
 				break;
 
 			case 'Random':
-				console.log("Let's pick a random card from the deck");
+				console.log("Let's pick a random card from the deck"); // Random function will run after 1 seconds
 				waitMsg = setTimeout(shuffeDeck, 1000);
 				break;
 
 			case 'Shuffle':
-				console.log("Let's shuffle through all the cards in the deck...");
+				console.log("Let's shuffle through all the cards in the deck..."); // Shuffle function will run after 1 seconds
 				waitMsg = setTimeout(shuffleDeck, 1000);
 				break;
 
 			case 'Show All':
-				console.log("Printing all the cards in the deck to the screen");
+				console.log("Printing all the cards in the deck to the screen"); // ShowAll function will run after 1 seconds
 				waitMsg = setTimeout(showCards, 1000);
 				break;
 
 			case 'Exit':
-				console.log("Thank you for using the flashcard-generator");
+				console.log("Thank you for using the flashcard-generator"); 
 				return;
 				break;
 
@@ -62,6 +62,7 @@ function openMenu() {
 
 openMenu(); // Calls the openMenu function to run
 
+// If the user choses to Create a card, this will run
 function createCard() {
 
 	inquirer.prompt([
@@ -175,4 +176,52 @@ function getQuestion(card) {
 		drawnCard = new ClozeCard(card.text, card.cloze);
 		return drawnCard.clozeRemoved();
 	}
+};
+
+// function to ask question from the stored cards in the library
+function askQuestions() {
+	if (count < library.length) { // if current count (while starting at 0) is less than the number of cards in the library...
+		playedCard = getQuestion(library[count]); // playedCard stores the question from the card with index equal to the current counter
+		inquirer.prompt([	// inquirer used to ask the question from the playedCard
+			{
+				type: "input",
+				message: playedCard,
+				name: "question"
+			}
+		]).then(function (answer) { // once the user answers
+			// If the users answer equals .back or .cloze of the playedCard run a message "You are correct"
+			if (answer.question === library[count].back || answer.question === library[count].cloze) {
+				console.log("You are correct!");
+			} else {
+				// Checks to see if current card if Cloze or Basic
+				if (drawnCard.front !== undefined) { // if card has a front then it is a Basic card
+					console.log("Sorry, the correct answer was " + library[count].back + "."); // Grabs and shows correct answer from cardLibrary
+				} else { // otherwise it is a Cloze card
+					console.log("Sorry, the correct answer was " + library[count].cloze + "."); // Grabs and shows correct answer from cardLibrary
+				}
+			}
+
+			count++;	// Increase the counter for the next run through
+			askQuestions(); // Recursion, call the function within the function to keep it running. It will stop when counter = library.length
+		});
+	} else {
+		count = 0;	// Reset counter to 0 once loop ends
+		openMenu(); // Call the menu for the user to continue using the app
+	}
+};
+
+function shuffleDeck() {
+	newDeck = library.slice(0); // Copy the flashcards into a new array
+	for (var i = library.length - 1; i > 0; i--) { // Fisher-Yates shuffle should jumble up order of copied array
+
+		var getIndex = Math.floor(Math.random() * (i +1));
+		var shuffled = newDeck[getIndex];
+
+		newDeck[getIndex] = newDeck[i];
+
+		newDeck[i] = shuffled;
+	}
+
+	fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2)); // Write the new randomized array over the old one
+	console.log("The deck of flashcards have been shuffled");
 }
