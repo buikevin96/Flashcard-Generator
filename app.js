@@ -188,7 +188,7 @@ function askQuestions() {
 				message: playedCard,
 				name: "question"
 			}
-		]).then(function (answer) { // once the user answers
+		]).then(function(answer) { // once the user answers
 			// If the users answer equals .back or .cloze of the playedCard run a message "You are correct"
 			if (answer.question === library[count].back || answer.question === library[count].cloze) {
 				console.log("You are correct!");
@@ -224,4 +224,70 @@ function shuffleDeck() {
 
 	fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2)); // Write the new randomized array over the old one
 	console.log("The deck of flashcards have been shuffled");
+}
+
+// function to ask question from a random card
+function randomCard() {
+	var randomNumber = Math.floor(Math.random() * (library.length -1)); // Get a random index number within the length of the current library
+
+	playedCard = getQuestion(library[randomNumber]);	//playedCard stores the question from the card with index equal to the randomNumber
+		inquirer.prompt([
+			{
+				type: "input",
+				message: playedCard,
+				name: "question"
+			}
+		]).then(function(answer) {
+			// If the user answers equals .back or .cloze of the playedCard run a message
+			if (answer.question === library[randomNumber].back || answer.question === library[randomNumber].cloze) {
+				console.log("You are correct!");
+				setTimeout(openMenu, 1000);
+			} else {
+				// Check to see if random card if Cloze or Basic
+				if (drawnCard.front !== undefined) { // If card has a front then it is a basic card
+				console.log("Sorry, the correct answer was " + library[randomNumber].back + "."); // Grabs and shows correct answer from cardLibrary
+				setTimeout(openMenu, 1000);
+				} else { // otherwise it is a cloze card
+					console.log("Sorry, the correct answer was " library[randomNumber].cloze + "."); // Grabs and shows correct answer from cardLibrary
+					setTimeout(openMenu, 1000);
+				}
+			}
+		});
+};
+
+//function to print all cards on screen for user to read through
+function showCards(){
+
+	var library = require("./cardLibrary.json");
+
+	if (count < library.length) { // if counter stays below the length of the library array
+
+		if(library[count].front !== undefined) { // if card has a front, then it is a basicCard
+			console.log("");
+	        console.log("++++++++++++++++++ Basic Card ++++++++++++++++++");
+	        console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+	        console.log("Front: " + library[count].front); //grabs & shows card question
+	        console.log("------------------------------------------------");
+	        console.log("Back: " + library[count].back + "."); //grabs & shows card question
+	        console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+	        console.log("");
+		} else { // otherwise it is a Cloze card
+	        console.log("");
+	        console.log("++++++++++++++++++ Cloze Card ++++++++++++++++++");
+	        console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+	        console.log("Text: " + library[count].text); //grabs & shows card question
+	        console.log("------------------------------------------------");
+	        console.log("Cloze: " + library[count].cloze + "."); //grabs & shows card question
+	        console.log("++++++++++++++++++++++++++++++++++++++++++++++++");
+	        console.log("");
+
+		}
+
+		count++; // increase the counter each round
+		showCards(); // re-call the function with in itself. recursion
+	} else {
+		count = 0; // reset counter to 0 once loop ends
+		openMenu(); // call the menu for the user to contiue using the app
+	}
+
 }
