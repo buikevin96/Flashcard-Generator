@@ -1,25 +1,20 @@
-var Card = require("./BasicCard.js");
-
 function ClozeCard(text, cloze){
 
-	this.fullText = "",
-	this.partial = partial,
+	this.text = text.split(cloze), // Whatever is in the first param, replace with second param
 	this.cloze = cloze // Contains only the deleted portion of the text
 
-}
+};
 
-var firstPresidentCloze = new ClozeCard("George Washington was the first president of the United States.", "George Washington");
+// Constructor that creates a prototype of ClozeCard to return the question missing cloze
+function ClozeCardPrototype() {
 
-// "George Washington"
-console.log(firstPresidentCloze.cloze);
+	this.clozeRemoved = function() {
+		return `${this.text[0]} ... ${this.text[1]}`;
+	};
+};
 
-// " ... was the first president of the United States"
-console.log(firstPresidentCloze.partial);
+ClozeCard.prototype = new ClozeCardPrototype();
 
-// George Washington was the first president of the United States.
-console.log(firstPresidentCloze.fullText);
 
-// Should throw or log an error because "oops" doesn't appear in "This doesn't work"
-var brokenCloze = new ClozeCard("This doesn't work", "oops");
 
-module.exports = ClozeCard;
+module.exports = ClozeCard; // Allows this file to be called by other files
