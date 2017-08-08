@@ -1,7 +1,7 @@
 var BasicCard = require("./BasicCard.js");
 var ClozeCard = require("./ClozeCard.js"); 
 
-var library = require("./cardLibrary.json")
+var library = require("./cardLibrary.json");
 
 var inquirer = require('inquirer'); // Initialized NPM Inquirer Package
 var fs = require("fs");
@@ -15,8 +15,8 @@ function openMenu() {
 		{
 			type: "list",
 			message: "\nChoose a menu option from the list below", // message shown to user
-			choices: ["Create", "Use All", "Random", "Shuffle", "Show All", "Exit"],
-			name: menuOptions
+			choices: ["Create", "Use All", "Random", "Shuffle", "Show All", "Exit", "Delete All (WARNING)"],
+			name: "menuOptions"
 		}
 	]).then(function(answer){
 		var waitMsg;
@@ -34,7 +34,7 @@ function openMenu() {
 
 			case 'Random':
 				console.log("Let's pick a random card from the deck"); // Random function will run after 1 seconds
-				waitMsg = setTimeout(shuffeDeck, 1000);
+				waitMsg = setTimeout(randomCard, 1000);
 				break;
 
 			case 'Shuffle':
@@ -49,6 +49,7 @@ function openMenu() {
 
 			case 'Exit':
 				console.log("Thank you for using the flashcard-generator"); 
+				process.exit();
 				return;
 				break;
 
@@ -98,8 +99,11 @@ function createCard() {
 			};
 
 			library.push(cardObj); // Push card Object into library
-			fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2));	// write the updated array to the cardLibrary	})
+			fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2), (err) => {
+				if (err) throw err;
+			});	
 
+			// write the updated array to the cardLibrary	})
 			inquirer.prompt([
 				{
 					type: "list",
@@ -139,7 +143,9 @@ function createCard() {
 		};
 		if (cardObj.text.indexOf(cardObj.cloze) !== -1) {
 			library.push(cardObj); // Pushes cardObj into library
-			fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2));
+			fs.writeFile("cardLibrary.json", JSON.stringify(library, null, 2), (err) => {
+				if (err) throw err;
+			});
 		} else {
 			console.log("Sorry, the cloze must math some word(s) in the text of your statement.");
 		}
@@ -222,8 +228,12 @@ function shuffleDeck() {
 		newDeck[i] = shuffled;
 	}
 
-	fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2)); // Write the new randomized array over the old one
+	fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2), (err) => {
+		if (err) throw err;
+	}); 
+	// Write the new randomized array over the old one
 	console.log("The deck of flashcards have been shuffled");
+	openMenu();
 }
 
 // function to ask question from a random card
@@ -248,7 +258,7 @@ function randomCard() {
 				console.log("Sorry, the correct answer was " + library[randomNumber].back + "."); // Grabs and shows correct answer from cardLibrary
 				setTimeout(openMenu, 1000);
 				} else { // otherwise it is a cloze card
-					console.log("Sorry, the correct answer was " library[randomNumber].cloze + "."); // Grabs and shows correct answer from cardLibrary
+					console.log("Sorry, the correct answer was " + library[randomNumber].cloze + "."); // Grabs and shows correct answer from cardLibrary
 					setTimeout(openMenu, 1000);
 				}
 			}
