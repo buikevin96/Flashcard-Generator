@@ -1,52 +1,7 @@
 [
   {
     "type": "BasicCard",
-    "front": "Who was the first president of the united states?",
-    "back": "George Washington"
-  },
-  {
-    "type": "BasicCard",
     "front": "Who was the first president of the United States?",
     "back": "George Washington"
-  },
-  {
-    "type": "ClozeCard",
-    "text": "George Washington was the first president of the United States.",
-    "cloze": "George Washington"
-  },
-  {
-    "type": "BasicCard",
-    "front": "Who was the first president of the United States?",
-    "back": "George Washington"
-  },
-  {
-    "type": "ClozeCard",
-    "text": "George Washington was the first president of the united states",
-    "cloze": "George Washington"
-  },
-  {
-    "type": "ClozeCard",
-    "text": "George Washington was the first president of the United States",
-    "cloze": "George Washington"
-  },
-  {
-    "type": "BasicCard",
-    "front": "Who was the first black president?",
-    "back": "Barack Obama"
-  },
-  {
-    "type": "ClozeCard",
-    "text": "Barack Obama was the first black president of the united states",
-    "cloze": "Barack Obama"
-  },
-  {
-    "type": "BasicCard",
-    "front": "Who was the first president of the United States?",
-    "back": "George Washington"
-  },
-  {
-    "type": "BasicCard",
-    "front": "Who is the oldest president of the United States?",
-    "back": "Donald Trump"
   }
 ]

@@ -15,7 +15,7 @@ function openMenu() {
 		{
 			type: "list",
 			message: "\nChoose a menu option from the list below", // message shown to user
-			choices: ["Create", "Use All", "Random", "Shuffle", "Show All", "Exit", "Delete All (WARNING)"],
+			choices: ["Create", "Use All", "Random", "Shuffle", "Show All", "Exit"], //"Delete All"],
 			name: "menuOptions"
 		}
 	]).then(function(answer){
@@ -52,6 +52,11 @@ function openMenu() {
 				process.exit();
 				return;
 				break;
+
+			// case 'Delete All':
+			// 	console.log("Warning! This will permanently delete all of your card information...");
+			// 	waitMsg = setTimeout(clearData, 1000);
+			// 	break;
 
 			default: 
 				console.log("");
@@ -301,3 +306,27 @@ function showCards(){
 	}
 
 }
+
+// function clearData(){
+// 	// Asks the user if they would like to remove data cardLibrary
+// 	inquirer.prompt([
+// 		{
+// 			type: "list",
+// 			message: "Are you sure you would like to delete all of the card information?",
+// 			name: "deleteOption",
+// 			choices: ["Yes", "No"]
+// 		}
+// 	]).then(function(answer){
+
+// 		if (answer.deleteOption === "Yes") {
+// 			json = [];
+// 			fs.writeFile("cardLibrary.json", JSON.stringify(newDeck, null, 2), (err) => {
+// 				if (err) throw err;
+// 			}); 
+// 		} else {
+// 			// Return to menu
+// 			openMenu();
+// 		}
+
+// 	});
+// };
